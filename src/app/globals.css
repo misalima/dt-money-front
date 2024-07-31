@@ -4,14 +4,18 @@
 
 :root {
   --title: #363F5F;  
-  --income: #12A454;
-  --outcome: #E52E4D;
+  --income: 147, 80%, 36%;
+  --outcome: 350,78%,54%;
   --header: #5429CC;
   --table-header: #969CB2;
   --income-value: #33CC95;
-  --outcome-value: #E52E4D;
+  --outcome-value: 350,78%,54%;
   --button: #6933FF;
-
+  --background: #E7E9EE;  
+  --modal-background: #F0F2F5;
+  --input: #969CB2;
+  --input-border: #D7D7D7;
+  --transaction-border: #969CB2;  
 }
 
 /*:root {
