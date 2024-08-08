@@ -6,6 +6,7 @@ import { ITransaction } from "@/types/transaction";
 import { Table } from "@/components/Table";
 import { use, useEffect, useState } from "react";
 import { FormModal } from "@/components/FormModal";
+import { useTransaction } from "@/hooks/useTransaction";
 
 const oldTransactions: ITransaction[] = [
   {
@@ -32,19 +33,21 @@ export interface ITotal {
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [transactions, setTransactions] = useState<ITransaction[]>(oldTransactions);
   const [totalTransactions, setTotalTransactions] = useState<ITotal>({totalIncome: 0, totalOutcome: 0, total: 0})
+
+  const { data: transactions, isLoading } = useTransaction.ListAll()
+  const { mutateAsync: createTransaction } = useTransaction.Create()
 
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false)
 
-  const handleAddTransaction = (transaction: ITransaction) => {
-    setTransactions([...transactions, transaction])
+  const handleAddTransaction = async (transaction: ITransaction) => {
+    await createTransaction(transaction)    
   }
 
   useEffect(() => {
-    const totals = transactions.reduce((acc, transaction) => {
+    const totals = transactions?.reduce((acc, transaction) => {
       if (transaction.type === 'income') {
         acc.totalIncome += transaction.price;
         acc.total += transaction.price;
@@ -54,16 +57,19 @@ export default function Home() {
       }
       return acc;
     }, { totalIncome: 0, totalOutcome: 0, total: 0 });
-    setTotalTransactions(totals)
+    setTotalTransactions(totals || { totalIncome: 0, totalOutcome: 0, total: 0 });
    
   },[transactions] )
+
+  if (isLoading) return <h1>Carregando...</h1>
+
 
   return (    
    <div className="bg-background h-full min-h-screen">
     <Header openModal={openModal} />    
     <BodyContainer>
         <CardContainer totals={totalTransactions} />    
-        <Table data={transactions} />
+        <Table data={transactions ?? []} />
     </BodyContainer>          
     {isModalOpen && (<FormModal formTitle="Cadastro de Transação" closeModal={closeModal} AddTransaction={handleAddTransaction} />)}
    </div>
