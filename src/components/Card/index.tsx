@@ -1,3 +1,4 @@
+import React from "react";
 import { formatCurrency } from "@/utils";
 import Image from "next/image";
 

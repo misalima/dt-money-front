@@ -1,5 +1,4 @@
-/* eslint-disable react/react-in-jsx-scope */
-import React from "react";
+import React from 'react'
 import { useState } from "react";
 import { Input } from "../Form/Input";
 import { TransactionSwitcher } from "../TransactionSwitcher";
@@ -8,29 +7,31 @@ import { ITransaction } from "@/types/transaction";
 export interface IFormModalProps {
     formTitle: string;
     closeModal: () => void;
-    AddTransaction: (transaction: ITransaction) => void;
+    UpdateTransaction: (transaction: ITransaction) => void;
+    transaction: ITransaction;
 }
+export function UpdateModal({ formTitle, closeModal, UpdateTransaction, transaction }: IFormModalProps) {
+        const [title, setName] = useState(transaction.title);
+        const [price, setPrice] = useState(transaction.price);
+        const [category, setCategory] = useState(transaction.category);
+        const [type, setType] = useState<"income" | "outcome">(transaction.type);
 
-
-export function FormModal({formTitle, closeModal, AddTransaction}: IFormModalProps){
-  const [title, setName] = useState('');
-  const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState('');
-  const [type, setType] = useState<"income"|"outcome">('income');
-
-
-  const handleAddTransaction = () => {
-    AddTransaction({
-      title,
-      price,
-      category,
-      type,
-      data: new Date()
-    });
-    closeModal();
-  }
+        
+        const handleUpdateTransaction = () => {
+            
+            UpdateTransaction({
+                id: transaction.id,
+                title,
+                price,
+                category,
+                type,
+                data: new Date()
+            });
+            closeModal();
+        }
     return (
-  <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true"> 
+    <>
+    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true"> 
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
@@ -52,17 +53,18 @@ export function FormModal({formTitle, closeModal, AddTransaction}: IFormModalPro
               </div>
             </div>
             <form className="flex flex-col gap-4 px-12 mt-4 mb-6">
-                <Input type="text" placeholder="Nome" onChange={(e) => setName(e.target.value)}/>
-                <Input type="number" placeholder="Preço" onChange={(e) => setPrice(Number(e.target.value))}/>
+                <Input type="text" placeholder="Nome" value={title} onChange={(e) => setName(e.target.value)}/>
+                <Input type="number" placeholder="Preço" value={price} onChange={(e) => setPrice(Number(e.target.value))}/>
                 <TransactionSwitcher setType={setType} type={type}/>
-                <Input type="text" placeholder="Categoria" onChange={(e) => setCategory(e.target.value)}/>            
+                <Input type="text" placeholder="Categoria" value={category} onChange={(e) => setCategory(e.target.value)}/>            
             </form>
             <div className="bg-gray-50 px-12 py-3 flex sm:flex-row-reverse w-full mb-16">          
-              <button type="button" className="mt-3 w-full justify-center rounded-md bg-income-value text-white px-3 py-5 text-normal font-semibold shadow-sm hover:opacity-80 sm:mt-0" onClick={handleAddTransaction}>Confirmar</button>
+              <button type="button" className="mt-3 w-full justify-center rounded-md bg-income-value text-white px-3 py-5 text-normal font-semibold shadow-sm hover:opacity-80 sm:mt-0" onClick={handleUpdateTransaction}>Confirmar</button>
            </div>
       </div>
     </div>
   </div>
 </div>
-    )
+         </>
+  )
 }

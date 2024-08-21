@@ -1,3 +1,4 @@
+import React from "react";
 import { ITotal } from "@/app/page";
 import { Card } from "../Card";
 

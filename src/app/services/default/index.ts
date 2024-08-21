@@ -25,7 +25,7 @@ export class DefaultApi<T> {
 
 
   update = async (formData: T): Promise<T> => {
-    const id = (formData as any)[this.resourceId]
+    const id = (formData as never)[this.resourceId]
     const { data } = await api.put<T>(`${this.endpoint}/${id}`, formData)
     return data
   }
